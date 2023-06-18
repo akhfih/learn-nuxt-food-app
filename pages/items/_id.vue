@@ -12,7 +12,9 @@
 
       <div class="quantity">
         <input type="number" min="1" v-model="count" />
-        <button class="primary">Add to Cart - ${{ combinedPrice }}</button>
+        <button @click="addToCart" class="primary">
+          Add to Cart - ${{ combinedPrice }}
+        </button>
       </div>
 
       <fieldset v-if="currentItem.options">
@@ -46,6 +48,11 @@
           <label :for="addon">{{ addon }}</label>
         </div>
       </fieldset>
+      <app-toast v-if="cartSubmitted">
+        Order Added!
+        <br />Return to
+        <nuxt-link to="/restaurants">restaurants</nuxt-link>
+      </app-toast>
     </section>
 
     <section class="options">
@@ -66,6 +73,7 @@ export default {
       itemOptions: "",
       itemAddons: [],
       itemSizeAndCost: [],
+      cartSubmitted: false,
     };
   },
   computed: {
@@ -88,6 +96,20 @@ export default {
     combinedPrice() {
       let total = this.count * this.currentItem.price;
       return total.toFixed(2);
+    },
+  },
+  methods: {
+    addToCart() {
+      let formOutput = {
+        item: this.currentItem.item,
+        count: this.count,
+        options: this.itemOptions,
+        addOns: this.itemAddons,
+        combinedPrice: this.combinedPrice,
+      };
+
+      this.cartSubmitted = true;
+      this.$store.commit("addToCart", formOutput);
     },
   },
 };
