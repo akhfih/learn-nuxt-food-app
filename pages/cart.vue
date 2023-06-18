@@ -32,6 +32,7 @@
         </tbody>
       </table>
     </section>
+    <AppEmptyCart v-else />
   </div>
 </template>
 
